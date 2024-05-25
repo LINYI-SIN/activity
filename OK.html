@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logger</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        #container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        #activity-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .activity-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .activity-name {
+            margin-right: 10px;
+        }
+        .duration-label {
+            font-size: 14px;
+            color: #666;
+        }
+        #quit-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #quit-button:hover {
+            background-color: #bd2130;
+        }
+        #refresh-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #refresh-button:hover {
+            background-color: #218838;
+        }
+        .active-button {
+            background-color: orange !important;
+        }
+    </style>
+<script type="text/javascript" nonce="e050395fef5b428aa82ed05a897" src="//local.adguard.org?ts=1716625371465&amp;type=content-script&amp;dmn=t365-my.sharepoint.com&amp;url=https%3A%2F%2Ft365-my.sharepoint.com%2Fpersonal%2Fs12350222_tdrive_thu_edu_tw%2F_layouts%2F15%2Fdownload.aspx%3FUniqueId%3D8293e743%252Ded1a%252D456e%252Da6d9%252D5c5a5fa8a5e5&amp;app=msedge.exe&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script>
+<script type="text/javascript" nonce="e050395fef5b428aa82ed05a897" src="//local.adguard.org?ts=1716625371465&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;type=user-script"></script></head>
+<body>
+    <div id="container">
+        <h1>THU ♥XIN♥</h1>
+        <div id="activity-buttons">
+            <button onclick="startTimer('Study')">Study</button>
+            <button onclick="startTimer('Bathroom')">Bathroom</button>
+            <button onclick="startTimer('Eat')">Eat</button>
+            <button onclick="startTimer('Sleep')">Sleep</button>
+            <button onclick="startTimer('Procrastinate')">Procrastinate</button>
+            <button onclick="startTimer('Coding')">Coding</button>
+            <button onclick="startTimer('Tutorial')">Tutorial</button>
+            <button onclick="startTimer('Entertainment')">Entertainment</button>
+            <button onclick="startTimer('Secret')">Secret</button>
+        </div>
+	<p id="time-label"></p>
+        <div id="activity-durations">
+            <!-- Activity durations will be displayed here -->
+        </div>
+        <button id="refresh-button" onclick="refreshPage()">Refresh</button>
+        <button id="quit-button" onclick="onClosing()">Quit</button>
+        
+    </div>
+
+    <script>
+        let currentActivity = null;
+        let startTime = null;
+
+        function startTimer(activity) {
+            if (currentActivity !== activity) {
+                stopTimer();  
+                currentActivity = activity;
+                startTime = new Date();
+                changeButtonColor(activity);
+            }
+            updateButtons();
+            updateTimer();
+        }
+
+        function updateTimer() {
+            if (startTime !== null) {
+                let duration = Math.floor((new Date() - startTime) / 1000);
+                let hours = Math.floor(duration / 3600);
+                let minutes = Math.floor((duration % 3600) / 60);
+                let seconds = duration % 60;
+                let formattedTime = pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2);
+                document.getElementById('duration-label').innerText = 'Duration: ' + formattedTime;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (startTime !== null) {
+                let duration = Math.floor((new Date() - startTime) / 1000);
+                let formattedDuration = pad(Math.floor(duration / 3600), 2) + ':' + pad(Math.floor(duration % 3600 / 60), 2) + ':' + pad(duration % 60, 2);
+                let log = currentActivity + ',' + formattedDuration;
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', 'log.php', true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.send('log=' + log);
+                appendDuration(currentActivity, formattedDuration);
+                currentActivity = null;
+                startTime = null;
+            }
+        }
+
+        function updateButtons() {
+            let buttons = document.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].innerText === currentActivity) {
+                    buttons[i].setAttribute('disabled', 'disabled');
+                } else {
+                    buttons[i].removeAttribute('disabled');
+                }
+            }
+        }
+
+        function changeButtonColor(activity) {
+            let buttons = document.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].innerText === activity) {
+                    buttons[i].classList.add('active-button');
+                } else {
+                    buttons[i].classList.remove('active-button');
+                }
+            }
+        }
+
+        function appendDuration(activity, duration) {
+            let activityDurations = document.getElementById('activity-durations');
+            let activityWrapper = document.createElement('div');
+            activityWrapper.classList.add('activity-wrapper');
+            let activityName = document.createElement('div');
+            activityName.classList.add('activity-name');
+            activityName.innerText = activity + ':';
+            let durationLabel = document.createElement('div');
+            durationLabel.classList.add('duration-label');
+            durationLabel.innerText = duration;
+            activityWrapper.appendChild(activityName);
+            activityWrapper.appendChild(durationLabel);
+            activityDurations.appendChild(activityWrapper);
+        }
+
+        function onClosing() {
+            stopTimer();
+            window.close();
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+
+        function updateTime() {
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = pad(now.getMonth() + 1, 2);
+            let date = pad(now.getDate(), 2);
+            let hours = pad(now.getHours(), 2);
+            let minutes = pad(now.getMinutes(), 2);
+            let seconds = pad(now.getSeconds(), 2);
+            document.getElementById('time-label').innerText = 'Current Time: ' + year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+            setTimeout(updateTime, 1000);
+        }
+
+        function pad(num, size) {
+            let s = num + "";
+            while (s.length < size) s = "0" + s;
+            return s;
+        }
+
+        updateTime();
+    </script>
+</body>
+</html>
