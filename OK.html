@@ -90,12 +90,20 @@
         .active-button {
             background-color: orange !important;
         }
+        #powered-by {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
     </style>
 	<script type="text/javascript" nonce="e050395fef5b428aa82ed05a897" src="//local.adguard.org?ts=1716625371465&amp;type=content-script&amp;dmn=t365-my.sharepoint.com&amp;url=https%3A%2F%2Ft365-my.sharepoint.com%2Fpersonal%2Fs12350222_tdrive_thu_edu_tw%2F_layouts%2F15%2Fdownload.aspx%3FUniqueId%3D8293e743%252Ded1a%252D456e%252Da6d9%252D5c5a5fa8a5e5&amp;app=msedge.exe&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script>
 	<script type="text/javascript" nonce="e050395fef5b428aa82ed05a897" src="//local.adguard.org?ts=1716625371465&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;type=user-script"></script></head>
 <body>
     <div id="container">
-        <h1>THU ♥XIN♥</h1>
+        <a href="https://www.thu.edu.tw/web/user/user.php?did=2" target="_blank" style="text-decoration: none; color: inherit;">
+            <h1>THU ♥XIN♥</h1>
+        </a>
         <div id="activity-buttons">
             <button onclick="startTimer('Study')">Study</button>
             <button onclick="startTimer('Toilet')">Toilet</button>
@@ -103,7 +111,6 @@
             <button onclick="startTimer('Sleep')">Sleep</button>
             <button onclick="startTimer('Procrastinate')">Procrastinate</button>
             <button onclick="startTimer('Coding')">Coding</button>
-	    <button onclick="startTimer('Document')">Document</button>
             <button onclick="startTimer('Tutorial')">Tutorial</button>
             <button onclick="startTimer('Entertainment')">Entertainment</button>
             <button onclick="startTimer('Secret')">Secret</button>
@@ -114,8 +121,11 @@
         </div>
         <button id="refresh-button" onclick="refreshPage()">Refresh</button>
         <button id="quit-button" onclick="onClosing()">Quit</button>
-        
-    </div>
+        </div>
+   
+    <div id="powered-by">powered by hfsckrwac</div>
+
+    
 
     <script>
         let currentActivity = null;
