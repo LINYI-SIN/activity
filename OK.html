@@ -104,7 +104,7 @@
         <a href="https://thu112go.github.io/eat/thueat.html" target="_blank" style="text-decoration: none; color: inherit;">
             <h1>THU ♥XIN♥</h1>
         </a>
-        <p id="open-time-label"></p>  
+          
         <div id="activity-buttons">
             <button onclick="startTimer('Study')">Study</button>
             <button onclick="startTimer('Toilet')">Toilet</button>
@@ -121,7 +121,9 @@
 	<p id="time-label"></p>
         <div id="activity-durations">
             <!-- Activity durations will be displayed here -->
+        <p id="open-time-label"></p>
         </div>
+        <p id="open-time-label"></p>
         <button id="refresh-button" onclick="refreshPage()">Refresh</button>
         <button id="quit-button" onclick="onClosing()">Quit</button>
         </div>
@@ -143,7 +145,7 @@
             let hours = pad(now.getHours(), 2);
             let minutes = pad(now.getMinutes(), 2);
             let seconds = pad(now.getSeconds(), 2);
-            document.getElementById('open-time-label').innerText = 'Opened at: ' + hours + ':' + minutes + ':' + seconds;
+            document.getElementById('open-time-label').innerText = 'Started at: ' + hours + ':' + minutes + ':' + seconds;
         }
 
         function startTimer(activity) {
