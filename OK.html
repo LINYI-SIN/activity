@@ -198,19 +198,38 @@
         }
 
         function appendDuration(activity, duration) {
-            let activityDurations = document.getElementById('activity-durations');
-            let activityWrapper = document.createElement('div');
-            activityWrapper.classList.add('activity-wrapper');
-            let activityName = document.createElement('div');
-            activityName.classList.add('activity-name');
-            activityName.innerText = activity + ':';
-            let durationLabel = document.createElement('div');
-            durationLabel.classList.add('duration-label');
-            durationLabel.innerText = duration;
-            activityWrapper.appendChild(activityName);
-            activityWrapper.appendChild(durationLabel);
-            activityDurations.appendChild(activityWrapper);
-        }
+    		let activityDurations = document.getElementById('activity-durations');
+    		let activityWrapper = document.createElement('div');
+    		activityWrapper.classList.add('activity-wrapper');
+    
+    		let activityName = document.createElement('div');
+    		activityName.classList.add('activity-name');
+    		activityName.innerText = activity + ':';
+    
+    		let timeStamp = document.createElement('div');
+    		timeStamp.classList.add('duration-label');
+    		let now = new Date();
+    		let hours = pad(now.getHours(), 2);
+    		let minutes = pad(now.getMinutes(), 2);
+        let seconds = pad(now.getSeconds(), 2);
+    		timeStamp.innerText = ` [Started at:${hours}:${minutes}:${seconds}]`;
+       
+        let spaceDiv = document.createElement('div');
+        spaceDiv.style.width = '10px';  // 設置空格的寬度
+    
+    		let durationLabel = document.createElement('div');
+    		durationLabel.classList.add('duration-label');
+    		durationLabel.innerText = duration;
+    
+    		// 依照順序加入元素
+    		activityWrapper.appendChild(activityName);
+    		activityWrapper.appendChild(durationLabel);  // 持續時間
+        	activityWrapper.appendChild(spaceDiv);       // 插入空格
+    		activityWrapper.appendChild(timeStamp);      // 開始時間
+    
+    		activityDurations.appendChild(activityWrapper);
+}
+
 
         function onClosing() {
             stopTimer();
